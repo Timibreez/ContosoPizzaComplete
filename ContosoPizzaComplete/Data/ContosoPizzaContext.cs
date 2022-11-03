@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ContosoPizzaComplete.Models;
 using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace ContosoPizzaComplete.Data
 {
@@ -18,7 +19,11 @@ namespace ContosoPizzaComplete.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConfigurationManager.ConnectionStrings["ContosoPizzaDb"].ConnectionString);
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("ContosoPizzaDb"));
         }
     }
 }
